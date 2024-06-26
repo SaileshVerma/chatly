@@ -24,8 +24,10 @@ class AppRouter {
       //   page = const SplashScreen();
       //   break;
 
-      case (Routes.home):
-        page = const HomeScreen();
+      case (Routes.root):
+        page = const HomeScreen(
+          title: "",
+        );
         break;
 
       default:
