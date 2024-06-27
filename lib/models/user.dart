@@ -24,6 +24,14 @@ class User extends HiveObject {
 
   static final empty = User(number: '-');
 
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'number': number,
+      'password': password,
+    };
+  }
+
   factory User.fromJson({
     required Map<String, dynamic> json,
     String? token,
