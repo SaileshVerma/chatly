@@ -1,8 +1,11 @@
 import 'package:chatly/bloc/chat/chats.dart';
 import 'package:chatly/bloc/login/login.dart';
 import 'package:chatly/bloc/signup/signups.dart';
+import 'package:chatly/models/user.dart';
+import 'package:chatly/repositories/user_repository.dart';
 import 'package:chatly/routes/app_router.dart';
-import 'package:chatly/screens/signup_screen/signup_screen.dart';
+import 'package:chatly/screens/chat_screen/chat_screen.dart';
+import 'package:chatly/screens/login_screen/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -23,15 +26,38 @@ class MyApp extends StatelessWidget {
           create: (ctx) => LoginBloc(),
         ),
       ],
-      child: MaterialApp(
-        title: 'Flutter Demo',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
-        ),
-        home: const SignUpScreen(),
-        onGenerateRoute: AppRouter.onGenerateRoute,
+      child: FutureBuilder(
+        future: HiveService().getLoggedInUser(),
+        builder: (ctx, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return MaterialApp(
+              title: 'Flutter Demo',
+              debugShowCheckedModeBanner: false,
+              theme: ThemeData(
+                colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+                useMaterial3: true,
+              ),
+              home: const Scaffold(
+                body: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+            );
+          }
+
+          final User? loggedInUser = snapshot.data;
+          return MaterialApp(
+            title: 'Flutter Demo',
+            debugShowCheckedModeBanner: false,
+            theme: ThemeData(
+              colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+              useMaterial3: true,
+            ),
+            home:
+                loggedInUser == null ? const LoginScreen() : const ChatScreen(),
+            onGenerateRoute: AppRouter.onGenerateRoute,
+          );
+        },
       ),
     );
   }

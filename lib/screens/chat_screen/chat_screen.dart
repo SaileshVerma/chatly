@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:chatly/repositories/user_repository.dart';
+import 'package:chatly/utils/constants/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -36,6 +38,19 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('WebSocket Chat'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              HiveService().logout();
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                Routes.login,
+                (route) => false,
+              );
+            },
+            child: const Text('Logout'),
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -68,7 +83,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 Expanded(
                   child: TextField(
                     controller: _controller,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Send a message',
                     ),
                   ),

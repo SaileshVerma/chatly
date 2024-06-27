@@ -1,4 +1,3 @@
-import 'package:chatly/bloc/signup/signup_event.dart';
 import 'package:chatly/bloc/signup/signups.dart';
 import 'package:chatly/utils/constants/enums.dart';
 import 'package:chatly/utils/constants/routes.dart';
