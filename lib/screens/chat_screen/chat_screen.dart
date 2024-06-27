@@ -12,17 +12,11 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _controller = TextEditingController();
-  final TextEditingController _controller2 = TextEditingController();
 
   final WebSocketChannel _channel = WebSocketChannel.connect(
     Uri.parse(
         'wss://echo.websocket.org/websocket'), // Replace with your WebSocket URL
   );
-  final WebSocketChannel _channel2 = WebSocketChannel.connect(
-    Uri.parse(
-        'wss://echo.websocket.org/websocket'), // Replace with your WebSocket URL
-  );
-
   @override
   void dispose() {
     _channel.sink.close();
@@ -32,7 +26,7 @@ class _ChatScreenState extends State<ChatScreen> {
   void _sendMessage() {
     if (_controller.text.isNotEmpty) {
       _channel.sink.add(json.encode({"hello": "world"}));
-      _channel2.sink.add(_controller2.text);
+
       _controller.clear();
     }
   }
@@ -41,7 +35,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('WebSocket Chat'),
+        title: const Text('WebSocket Chat'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -52,7 +46,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 stream: _channel.stream,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   } else if (snapshot.hasError) {
                     return Center(child: Text('Error: ${snapshot.error}'));
                   } else if (snapshot.hasData) {
