@@ -33,15 +33,16 @@ class SignUpScreen extends StatelessWidget {
                 children: [
                   const Text("Already have an account"),
                   TextButton(
-                      style: TextButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(horizontal: 2.0)),
-                      onPressed: () {
-                        Navigator.of(context).pushNamed(Routes.login);
-                      },
-                      child: const Text(
-                        "Let's Login",
-                        style: TextStyle(color: Colors.blue),
-                      )),
+                    style: TextButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(horizontal: 2.0)),
+                    onPressed: () {
+                      Navigator.of(context).pushNamed(Routes.login);
+                    },
+                    child: const Text(
+                      "Let's Login",
+                      style: TextStyle(color: Colors.blue),
+                    ),
+                  ),
                 ],
               ),
               OutlinedButton(
