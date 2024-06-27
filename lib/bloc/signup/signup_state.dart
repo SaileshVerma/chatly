@@ -34,9 +34,9 @@ class SignupState extends Equatable {
 
   @override
   List<Object> get props => [
-        formStatus,
         number,
         name,
+        formStatus,
         password,
         errorMessage,
       ];

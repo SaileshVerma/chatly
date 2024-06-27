@@ -3,19 +3,19 @@ import 'package:equatable/equatable.dart';
 
 class LoginState extends Equatable {
   final FormStatus formStatus;
-  final int number;
+  final String number;
   final String password;
   final String errorMessage;
 
   const LoginState({
     this.formStatus = FormStatus.initial,
-    this.number = 0,
+    this.number = '',
     this.password = '',
     this.errorMessage = "",
   });
 
   LoginState copyWith({
-    int? number,
+    String? number,
     FormStatus? formStatus,
     String? password,
     String? errorMessage,

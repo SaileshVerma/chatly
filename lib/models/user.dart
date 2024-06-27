@@ -1,32 +1,37 @@
-import 'package:equatable/equatable.dart';
+import 'package:hive/hive.dart';
+part 'user.g.dart';
 
-class User extends Equatable {
-  final String id;
+@HiveType(typeId: 0)
+class User extends HiveObject {
+  @HiveField(0)
+  final String number;
+
+  @HiveField(1)
   final String? name;
+
+  @HiveField(2)
+  final String? password;
+
+  @HiveField(3)
   final String? token;
 
-  const User({
-    required this.id,
+  User({
+    required this.number,
     this.name,
     this.token,
+    this.password,
   });
 
-  @override
-  List get props => [
-        id,
-        name,
-        token,
-      ];
-
-  static const empty = User(id: '-');
+  static final empty = User(number: '-');
 
   factory User.fromJson({
     required Map<String, dynamic> json,
     String? token,
   }) {
     return User(
-      id: json['id'],
+      number: json['number'],
       name: json['name'],
+      password: json['password'],
       token: token,
     );
   }

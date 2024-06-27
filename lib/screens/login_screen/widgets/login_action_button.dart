@@ -1,3 +1,4 @@
+import 'package:chatly/utils/constants/enums.dart';
 import 'package:chatly/utils/constants/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:chatly/bloc/login/login.dart';
@@ -12,7 +13,28 @@ class LoginActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LoginBloc, LoginState>(
+    return BlocConsumer<LoginBloc, LoginState>(
+      listener: (context, state) {
+        if (state.formStatus == FormStatus.failure &&
+            state.errorMessage.isNotEmpty) {
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(
+                content: Text(
+                  state.errorMessage,
+                ),
+              ),
+            );
+        } else if (state.formStatus == FormStatus.success) {
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            Routes.chat,
+            (route) => false,
+          );
+          context.read<LoginBloc>().add(LoginClearFieldOnNavigation());
+        }
+      },
       buildWhen: (previous, current) {
         return previous.errorMessage != current.errorMessage ||
             previous.formStatus != current.formStatus;
@@ -26,12 +48,6 @@ class LoginActionButton extends StatelessWidget {
         onPressed: () {
           if (formKey.currentState?.validate() ?? false) {
             ctx.read<LoginBloc>().add(const LoginSubmitted());
-
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              Routes.chat,
-              (route) => false,
-            );
           }
         },
         child: const Text(

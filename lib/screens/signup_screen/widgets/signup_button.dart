@@ -1,4 +1,6 @@
+import 'package:chatly/bloc/signup/signup_event.dart';
 import 'package:chatly/bloc/signup/signups.dart';
+import 'package:chatly/utils/constants/enums.dart';
 import 'package:chatly/utils/constants/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,32 +14,56 @@ class SignUpButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SignUpBloc, SignupState>(
-      buildWhen: (previous, current) =>
-          previous.errorMessage != current.errorMessage ||
-          previous.formStatus != current.formStatus,
-      builder: (ctx, state) => OutlinedButton(
-        style: OutlinedButton.styleFrom(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(4.0))),
-        onPressed: () {
-          if (formKey.currentState?.validate() ?? false) {
-            ctx.read<SignUpBloc>().add(const SignupSubmitted());
-
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              Routes.chat,
-              (route) => false,
+    return BlocConsumer<SignUpBloc, SignupState>(
+      listener: (context, state) {
+        if (state.formStatus == FormStatus.failure &&
+            state.errorMessage.isNotEmpty) {
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(
+                content: Text(
+                  state.errorMessage,
+                ),
+              ),
             );
-          }
-        },
-        child: const Text(
-          'SignUp',
-          style: TextStyle(
-            color: Colors.black54,
-            fontSize: 20.0,
+        } else if (state.formStatus == FormStatus.success) {
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            Routes.chat,
+            (route) => false,
+          );
+          context.read<SignUpBloc>().add(const SignupClearFieldOnNavigation());
+        }
+      },
+      listenWhen: (previous, current) {
+        return (previous.errorMessage != current.errorMessage ||
+            previous.formStatus != current.formStatus);
+      },
+      buildWhen: (previous, current) {
+        return (previous.errorMessage != current.errorMessage ||
+            previous.formStatus != current.formStatus);
+      },
+      builder: (context, state) => OutlinedButton(
+        style: OutlinedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(4.0),
           ),
         ),
+        onPressed: () {
+          if (formKey.currentState?.validate() ?? false) {
+            context.read<SignUpBloc>().add(const SignupSubmitted());
+          }
+        },
+        child: state.formStatus == FormStatus.inProgress
+            ? const CircularProgressIndicator()
+            : const Text(
+                'SignUp',
+                style: TextStyle(
+                  color: Colors.black54,
+                  fontSize: 20.0,
+                ),
+              ),
       ),
     );
   }

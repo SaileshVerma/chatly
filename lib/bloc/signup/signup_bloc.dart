@@ -1,13 +1,27 @@
 import 'package:chatly/bloc/signup/signups.dart';
+import 'package:chatly/models/user.dart';
+import 'package:chatly/repositories/user_repository.dart';
 import 'package:chatly/utils/constants/enums.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SignUpBloc extends Bloc<SignupEvent, SignupState> {
-  SignUpBloc() : super(SignupState()) {
+  final HiveService hiveService;
+
+  SignUpBloc()
+      : hiveService = HiveService(),
+        super(SignupState()) {
     on<SignupPhoneNumberChanged>(_onPhoneNumberChanged);
     on<SignupPasswordChanged>(_onPasswordChanged);
     on<SignupNameChanged>(_onNameChanged);
     on<SignupSubmitted>(_onSubmitted);
+    on<SignupClearFieldOnNavigation>(_onClearFields);
+  }
+
+  void _onClearFields(
+    SignupClearFieldOnNavigation event,
+    Emitter<SignupState> emit,
+  ) {
+    emit(const SignupState());
   }
 
   void _onPhoneNumberChanged(
@@ -46,11 +60,39 @@ class SignUpBloc extends Bloc<SignupEvent, SignupState> {
   void _onSubmitted(
     SignupSubmitted event,
     Emitter<SignupState> emit,
-  ) {
-    state.copyWith(formStatus: FormStatus.inProgress);
+  ) async {
+    emit(
+      state.copyWith(
+        formStatus: FormStatus.inProgress,
+      ),
+    );
 
-    //add this data to the hive
+    //checking existing user
+    final existingUser = await hiveService.getUser(state.number);
 
-    state.copyWith(formStatus: FormStatus.success);
+    if (existingUser != null) {
+      emit(
+        state.copyWith(
+          formStatus: FormStatus.failure,
+          errorMessage: 'User already exists',
+        ),
+      );
+
+      return;
+    }
+
+    final user = User(
+      number: state.number,
+      name: state.name,
+      password: state.password,
+    );
+
+    await hiveService.addUser(user);
+
+    emit(
+      state.copyWith(
+        formStatus: FormStatus.success,
+      ),
+    );
   }
 }
