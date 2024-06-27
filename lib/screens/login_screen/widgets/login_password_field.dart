@@ -9,6 +9,9 @@ class LoginPasswordField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LoginBloc, LoginState>(
+      buildWhen: (previous, current) {
+        return previous.password != current.password;
+      },
       builder: (ctx, state) => CustomTextField(
         label: 'Password:',
         hintText: "Enter Your Password",
@@ -19,7 +22,9 @@ class LoginPasswordField extends StatelessWidget {
 
           return null;
         },
-        onChanged: (_) => {},
+        onChanged: (val) => {
+          ctx.read<LoginBloc>().add(LoginPasswordChanged(val)),
+        },
       ),
     );
   }

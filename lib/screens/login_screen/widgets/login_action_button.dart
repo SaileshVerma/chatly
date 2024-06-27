@@ -13,6 +13,10 @@ class LoginActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LoginBloc, LoginState>(
+      buildWhen: (previous, current) {
+        return previous.errorMessage != current.errorMessage ||
+            previous.formStatus != current.formStatus;
+      },
       builder: (ctx, state) => OutlinedButton(
         style: OutlinedButton.styleFrom(
           shape: RoundedRectangleBorder(
@@ -21,6 +25,8 @@ class LoginActionButton extends StatelessWidget {
         ),
         onPressed: () {
           if (formKey.currentState?.validate() ?? false) {
+            ctx.read<LoginBloc>().add(const LoginSubmitted());
+
             Navigator.pushNamedAndRemoveUntil(
               context,
               Routes.chat,

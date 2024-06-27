@@ -1,43 +1,43 @@
 import 'package:equatable/equatable.dart';
 
-abstract class SignUpEvent extends Equatable {
-  const SignUpEvent();
+abstract class SignupEvent extends Equatable {
+  const SignupEvent();
 
   @override
   List<Object> get props => [];
 }
 
-class SignUpPhoneNumberChanged extends SignUpEvent {
+class SignupPhoneNumberChanged extends SignupEvent {
   final String phoneNumber;
 
-  const SignUpPhoneNumberChanged(this.phoneNumber);
+  const SignupPhoneNumberChanged(this.phoneNumber);
 
   @override
   List<Object> get props => [phoneNumber];
 }
 
-class SignUpPasswordChanged extends SignUpEvent {
+class SignupPasswordChanged extends SignupEvent {
   final String password;
 
-  const SignUpPasswordChanged(this.password);
+  const SignupPasswordChanged(this.password);
 
   @override
   List<Object> get props => [password];
 }
 
-class SignUpNameChanged extends SignUpEvent {
+class SignupNameChanged extends SignupEvent {
   final String name;
 
-  const SignUpNameChanged(this.name);
+  const SignupNameChanged(this.name);
 
   @override
   List<Object> get props => [name];
 }
 
-class SignUpSubmitted extends SignUpEvent {
-  const SignUpSubmitted();
+class SignupSubmitted extends SignupEvent {
+  const SignupSubmitted();
 }
 
-class SignUpClearFieldOnNavigation extends SignUpEvent {
-  const SignUpClearFieldOnNavigation();
+class SignupClearFieldOnNavigation extends SignupEvent {
+  const SignupClearFieldOnNavigation();
 }

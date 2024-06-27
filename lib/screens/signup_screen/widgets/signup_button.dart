@@ -13,14 +13,17 @@ class SignUpButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<SignUpBloc, SignupState>(
-      // buildWhen: (previous, current) =>
-
+      buildWhen: (previous, current) =>
+          previous.errorMessage != current.errorMessage ||
+          previous.formStatus != current.formStatus,
       builder: (ctx, state) => OutlinedButton(
         style: OutlinedButton.styleFrom(
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(4.0))),
         onPressed: () {
           if (formKey.currentState?.validate() ?? false) {
+            ctx.read<SignUpBloc>().add(const SignupSubmitted());
+
             Navigator.pushNamedAndRemoveUntil(
               context,
               Routes.chat,

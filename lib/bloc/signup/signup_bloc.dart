@@ -1,32 +1,56 @@
-import 'package:chatly/bloc/SignUp/SignUp_event.dart';
-import 'package:bloc/bloc.dart';
-import 'package:chatly/bloc/signup/signup_state.dart';
+import 'package:chatly/bloc/signup/signups.dart';
+import 'package:chatly/utils/constants/enums.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class SignUpBloc extends Bloc<SignUpEvent, SignupState> {
+class SignUpBloc extends Bloc<SignupEvent, SignupState> {
   SignUpBloc() : super(SignupState()) {
-    on<SignUpPhoneNumberChanged>(_onPhoneNumberChanged);
-    on<SignUpPasswordChanged>(_onPasswordChanged);
-    on<SignUpNameChanged>(_onNameChanged);
-    on<SignUpSubmitted>(_onSubmitted);
+    on<SignupPhoneNumberChanged>(_onPhoneNumberChanged);
+    on<SignupPasswordChanged>(_onPasswordChanged);
+    on<SignupNameChanged>(_onNameChanged);
+    on<SignupSubmitted>(_onSubmitted);
   }
 
   void _onPhoneNumberChanged(
-    SignUpPhoneNumberChanged event,
+    SignupPhoneNumberChanged event,
     Emitter<SignupState> emit,
-  ) {}
+  ) {
+    emit(
+      state.copyWith(
+        number: event.phoneNumber,
+      ),
+    );
+  }
 
   void _onPasswordChanged(
-    SignUpPasswordChanged event,
+    SignupPasswordChanged event,
     Emitter<SignupState> emit,
-  ) {}
+  ) {
+    emit(
+      state.copyWith(
+        password: event.password,
+      ),
+    );
+  }
 
   void _onNameChanged(
-    SignUpNameChanged event,
+    SignupNameChanged event,
     Emitter<SignupState> emit,
-  ) {}
+  ) {
+    emit(
+      state.copyWith(
+        name: event.name,
+      ),
+    );
+  }
 
   void _onSubmitted(
-    SignUpSubmitted event,
+    SignupSubmitted event,
     Emitter<SignupState> emit,
-  ) {}
+  ) {
+    state.copyWith(formStatus: FormStatus.inProgress);
+
+    //add this data to the hive
+
+    state.copyWith(formStatus: FormStatus.success);
+  }
 }

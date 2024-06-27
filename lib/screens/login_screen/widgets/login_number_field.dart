@@ -9,10 +9,12 @@ class LoginPhoneNumberField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LoginBloc, LoginState>(
+      buildWhen: (previous, current) {
+        return previous.number != current.number;
+      },
       builder: (ctx, state) => CustomTextField(
         label: 'Phone No:',
         hintText: "Enter Your Contact Number",
-        onChanged: (_) => {},
         validator: (value) {
           if (value == null || value.isEmpty) {
             return 'Phone number is required';
@@ -20,6 +22,9 @@ class LoginPhoneNumberField extends StatelessWidget {
             return 'Enter a valid phone number';
           }
           return null;
+        },
+        onChanged: (val) => {
+          ctx.read<LoginBloc>().add(LoginPhoneNumberChanged(val)),
         },
       ),
     );

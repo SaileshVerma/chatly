@@ -3,21 +3,21 @@ import 'package:equatable/equatable.dart';
 
 class SignupState extends Equatable {
   final FormStatus formStatus;
-  final int number;
+  final String number;
   final String password;
   final String name;
   final String errorMessage;
 
   const SignupState({
     this.formStatus = FormStatus.initial,
-    this.number = 0,
+    this.number = '',
     this.password = '',
     this.name = '',
     this.errorMessage = "",
   });
 
   SignupState copyWith({
-    int? number,
+    String? number,
     FormStatus? formStatus,
     String? password,
     String? name,
