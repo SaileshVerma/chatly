@@ -57,6 +57,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     final user = await hiveService.getUser(state.number);
 
     if (user == null || user.password != state.password) {
+      print(user?.password);
       emit(state.copyWith(
         formStatus: FormStatus.failure,
         errorMessage: 'Invalid username or password',

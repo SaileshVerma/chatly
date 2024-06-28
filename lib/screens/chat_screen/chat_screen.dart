@@ -1,13 +1,19 @@
 import 'dart:convert';
-import 'package:chatly/repositories/contacts_repository.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:flutter/material.dart';
 
+import 'package:chatly/repositories/contacts_repository.dart';
+import 'package:chatly/bloc/contacts/contact_bloc.dart';
+import 'package:chatly/bloc/contacts/contact_event.dart';
+import 'package:chatly/bloc/contacts/contact_state.dart';
 import 'package:chatly/screens/chat_screen/add_contact_widgets/add_contact_form.dart';
 import 'package:chatly/screens/chat_screen/widgets/contacts_drawer.dart';
 import 'package:chatly/models/message.dart';
 import 'package:chatly/models/user.dart';
 import 'package:chatly/repositories/user_repository.dart';
+
+var scaffoldKey = GlobalKey<ScaffoldState>();
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -34,7 +40,6 @@ class _ChatScreenState extends State<ChatScreen> {
       setState(() {
         loggedInUser = user;
       });
-      print('llllllllllllllll #${loggedInUser?.name}');
     });
 
     super.initState();
@@ -42,7 +47,6 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   void dispose() {
-    // _channel.sink.close();
     super.dispose();
   }
 
@@ -64,7 +68,9 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
       appBar: AppBar(
+        leading: DrawerMenuButton(),
         backgroundColor: Colors.green,
         title: const ListTile(
           leading: CircleAvatar(
@@ -144,7 +150,26 @@ class _ChatScreenState extends State<ChatScreen> {
           ],
         ),
       ),
-      drawer: ChatDrawer(),
+      drawer: const ChatDrawer(),
+    );
+  }
+}
+
+class DrawerMenuButton extends StatelessWidget {
+  const DrawerMenuButton({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<ContactBloc, ContactState>(
+      builder: (ctx, state) => IconButton(
+        icon: const Icon(Icons.menu),
+        onPressed: () {
+          ctx.read<ContactBloc>().add(const GetCurrentUserContactList());
+          scaffoldKey.currentState?.openDrawer();
+        },
+      ),
     );
   }
 }

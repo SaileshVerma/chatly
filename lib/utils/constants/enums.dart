@@ -4,3 +4,9 @@ enum FormStatus {
   inProgress,
   failure,
 }
+
+enum LoadingStatus {
+  initial,
+  loading,
+  complete,
+}

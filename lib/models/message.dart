@@ -1,7 +1,14 @@
 import 'package:equatable/equatable.dart';
+import 'package:hive/hive.dart';
 
+part 'message.g.dart';
+
+@HiveType(typeId: 2)
 class Message extends Equatable {
+  @HiveField(0)
   final String? content;
+
+  @HiveField(1)
   final DateTime? timestamp;
 
   const Message({

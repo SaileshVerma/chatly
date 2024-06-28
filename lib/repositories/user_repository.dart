@@ -1,24 +1,22 @@
 import 'package:chatly/models/user.dart';
+import 'package:chatly/utils/constants/hive_boxes.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HiveService {
-  static const String userBoxName = "userBox";
-
   Future<void> addUser(User user) async {
-    final box = await Hive.openBox<User>(userBoxName);
+    final box = await Hive.openBox<User>(USERBOX);
     await box.put(user.number, user);
-    getAllUsers();
   }
 
   Future<User?> getUser(String number) async {
-    final box = await Hive.openBox<User>(userBoxName);
+    final box = await Hive.openBox<User>(USERBOX);
     return box.get(number);
   }
 
   Future<List<User>> getAllUsers() async {
-    final box = await Hive.openBox<User>(userBoxName);
+    final box = await Hive.openBox<User>(USERBOX);
     return box.values.toList();
   }
 
@@ -29,8 +27,10 @@ class HiveService {
 
   Future<User?> getLoggedInUser() async {
     final prefs = await SharedPreferences.getInstance();
-    final number = prefs.getString('loggedInUser');
+    final number = prefs.getString(
+        'loggedInUser'); //TODO: NEED TO UPDATE THIS BASED ON SOME KEY
     if (number != null) {
+      print("##############!!##${number}");
       return getUser(number);
     }
     return null;

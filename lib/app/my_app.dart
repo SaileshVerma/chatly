@@ -1,4 +1,5 @@
 import 'package:chatly/bloc/chat/chats.dart';
+import 'package:chatly/bloc/contacts/contact_bloc.dart';
 import 'package:chatly/bloc/login/login.dart';
 import 'package:chatly/bloc/signup/signups.dart';
 import 'package:chatly/models/user.dart';
@@ -16,6 +17,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider(
+          create: (ctx) => ContactBloc(),
+        ),
         BlocProvider(
           create: (ctx) => ChatBloc(),
         ),
@@ -53,6 +57,7 @@ class MyApp extends StatelessWidget {
               colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
               useMaterial3: true,
             ),
+            // home: const ChatScreen(),
             home:
                 loggedInUser == null ? const LoginScreen() : const ChatScreen(),
             onGenerateRoute: AppRouter.onGenerateRoute,
