@@ -30,7 +30,6 @@ class HiveService {
     final number = prefs.getString(
         'loggedInUser'); //TODO: NEED TO UPDATE THIS BASED ON SOME KEY
     if (number != null) {
-      print("##############!!##${number}");
       return getUser(number);
     }
     return null;

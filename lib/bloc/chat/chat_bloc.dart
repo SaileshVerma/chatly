@@ -54,22 +54,12 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
       final currentLoggedInUser = await userHiveService.getLoggedInUser();
 
-      // if (state.name == null || user.password != state.password) {
-      //   emit(state.copyWith(
-      //     formStatus: FormStatus.failure,
-      //     errorMessage: 'Invalid username or password',
-      //   ));
-      //   return;
-      // }
-
       final Contact newContact = Contact(
         number: state.number,
         name: state.name,
         senderUserNumber: currentLoggedInUser?.number ?? '',
         messages: state.messages,
       );
-
-      print("BEFORE--> ${newContact.senderUserNumber}");
 
       await contactsRepositoryHiveService.addContact(
         contact: newContact,
@@ -82,7 +72,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         ),
       );
     } catch (error) {
-      print("ERROR HI ERROR *(*(*()))#$error");
       emit(state.copyWith(
         status: FormStatus.failure,
       ));

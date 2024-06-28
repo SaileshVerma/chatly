@@ -17,17 +17,33 @@ class Contact {
   @HiveField(3)
   final List<Message>? messages;
 
-  Contact({
+  const Contact({
     required this.senderUserNumber,
     required this.number,
     this.name,
-    this.messages,
+    this.messages = const [],
   });
 
-  static final empty = Contact(
+  static const empty = Contact(
     number: '',
     senderUserNumber: '',
+    messages: [],
+    name: "",
   );
+
+  Contact copyWith({
+    String? number,
+    String? name,
+    String? senderUserNumber,
+    List<Message>? messages,
+  }) {
+    return Contact(
+      senderUserNumber: senderUserNumber ?? this.senderUserNumber,
+      name: name ?? this.name,
+      number: number ?? this.number,
+      messages: messages ?? this.messages,
+    );
+  }
 
   factory Contact.fromJson({
     required Map<String, dynamic> json,

@@ -11,18 +11,24 @@ class Message extends Equatable {
   @HiveField(1)
   final DateTime? timestamp;
 
+  @HiveField(2)
+  final String? createdByNumber;
+
   const Message({
     this.content,
     this.timestamp,
+    this.createdByNumber,
   });
 
   Message copyWith({
     String? content,
+    String? createdByNumber,
     DateTime? timestamp,
   }) {
     return Message(
       content: content ?? this.content,
       timestamp: timestamp ?? this.timestamp,
+      createdByNumber: createdByNumber ?? this.createdByNumber,
     );
   }
 
@@ -38,9 +44,14 @@ class Message extends Equatable {
   }) {
     return Message(
       content: json["content"],
+      createdByNumber: json["createdByNumber"],
       timestamp: DateTime.tryParse(json["timestamp"]),
     );
   }
   @override
-  List get props => [content, timestamp];
+  List get props => [
+        content,
+        timestamp,
+        createdByNumber,
+      ];
 }

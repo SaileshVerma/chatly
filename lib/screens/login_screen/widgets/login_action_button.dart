@@ -41,6 +41,7 @@ class LoginActionButton extends StatelessWidget {
       },
       builder: (ctx, state) => OutlinedButton(
         style: OutlinedButton.styleFrom(
+          side: const BorderSide(color: Colors.orange, strokeAlign: 2),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(4.0),
           ),
@@ -50,11 +51,15 @@ class LoginActionButton extends StatelessWidget {
             ctx.read<LoginBloc>().add(const LoginSubmitted());
           }
         },
-        child: const Text(
-          'Login',
-          style: TextStyle(
-            color: Colors.black54,
-            fontSize: 20.0,
+        child: const Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Text(
+            'Login',
+            style: TextStyle(
+              color: Colors.orange,
+              fontWeight: FontWeight.w600,
+              fontSize: 22.0,
+            ),
           ),
         ),
       ),

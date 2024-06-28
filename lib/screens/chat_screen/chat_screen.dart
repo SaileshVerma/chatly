@@ -1,4 +1,8 @@
 import 'dart:convert';
+import 'package:chatly/bloc/chat/chats.dart';
+import 'package:chatly/bloc/current_contact/current_contact_bloc.dart';
+import 'package:chatly/bloc/current_contact/current_contact_event.dart';
+import 'package:chatly/bloc/current_contact/current_contacts.dart';
 import 'package:chatly/screens/chat_screen/widgets/app_bar_title_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -51,11 +55,12 @@ class _ChatScreenState extends State<ChatScreen> {
     super.dispose();
   }
 
-  void _sendMessage() {
+  void _sendMessage(BuildContext context) {
     if (_controller.text.isNotEmpty) {
       final message = Message(
         content: _controller.text,
         timestamp: DateTime.now(),
+        createdByNumber: loggedInUser?.number ?? "",
       );
 
       _channel.sink.add(
@@ -63,6 +68,13 @@ class _ChatScreenState extends State<ChatScreen> {
       );
 
       _controller.clear();
+      // context.read<ChatBloc>().add(AddContactMessage(message));
+      context.read<CurrentContactBloc>().add(
+            AddCurrentContactMessage(
+              currentLoggedInUserNumber: loggedInUser?.number ?? '',
+              message: message,
+            ),
+          );
     }
   }
 
@@ -80,7 +92,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return AddContactForm();
+                    return const AddContactForm();
                   },
                 );
               },
@@ -89,61 +101,90 @@ class _ChatScreenState extends State<ChatScreen> {
           IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert)),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            Expanded(
-              child: StreamBuilder(
-                stream: _channel.stream,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text('Error: ${snapshot.error}'));
-                  } else if (snapshot.hasData) {
-                    snapshot.data.toString().contains('Request')
-                        ? null
-                        : msgs.add(
-                            Message.fromJson(json: json.decode(snapshot.data)));
+      body: BlocBuilder<CurrentContactBloc, CurrentContactState>(
+          buildWhen: (previous, current) =>
+              previous.currentContact != current.currentContact,
+          builder: (ctx, contactState) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: StreamBuilder(
+                      stream: _channel.stream,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        } else if (snapshot.hasError) {
+                          return Center(
+                              child: Text('Error: ${snapshot.error}'));
+                        } else if (snapshot.hasData) {
+                          snapshot.data.toString().contains('Request')
+                              ? null
+                              : msgs.add(
+                                  Message.fromJson(
+                                    json: json.decode(snapshot.data),
+                                  ),
+                                );
 
-                    return ListView.builder(
-                        itemCount: msgs.length,
-                        itemBuilder: (ctx, i) {
-                          return ListTile(
-                            title: Text(msgs[i].content ?? ""),
+                          return ListView.builder(
+                            itemCount:
+                                contactState.currentContact?.messages?.length ??
+                                    0,
+                            itemBuilder: (ctx, i) {
+                              final messageObject =
+                                  contactState.currentContact?.messages?[i];
+
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  height: 60,
+                                  color: messageObject?.createdByNumber ==
+                                          loggedInUser?.number
+                                      ? Colors.green
+                                      : Colors.grey,
+                                  child: Column(
+                                    children: [
+                                      Text(messageObject?.content ?? ""),
+                                      Text(
+                                          messageObject?.createdByNumber ?? ""),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
                           );
-                        });
-                  } else {
-                    return Center(child: Text('No messages yet.'));
-                  }
-                },
-              ),
-            ),
-            Row(
-              children: [
-                Text("${loggedInUser?.name ?? "@@@@@@@@"}"),
-                Expanded(
-                  child: TextField(
-                    controller: _controller,
-                    decoration: const InputDecoration(
-                      labelText: 'Send a message',
+                        } else {
+                          return Center(child: Text('No messages yet.'));
+                        }
+                      },
                     ),
                   ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.send),
-                  onPressed: () {
-                    ContactsRepositoryHiveService()
-                        .getCurrentLoggedInUserContacts(
-                            currentUserNumber: loggedInUser?.number ?? '');
-                  },
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
+                  Row(
+                    children: [
+                      Text("${loggedInUser?.name ?? "@@@@@@@@"}"),
+                      Expanded(
+                        child: TextField(
+                          controller: _controller,
+                          decoration: const InputDecoration(
+                            labelText: 'Send a message',
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.send),
+                        onPressed: () {
+                          _sendMessage(ctx);
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          }),
       drawer: const ChatDrawer(),
     );
   }

@@ -23,9 +23,7 @@ class CustomTextField extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 2.0),
           child: Text(
             label,
-            style: const TextStyle(
-              fontSize: 20,
-            ),
+            style: const TextStyle(fontSize: 18, color: Colors.black),
           ),
         ),
         TextFormField(

@@ -45,6 +45,7 @@ class SignUpButton extends StatelessWidget {
       },
       builder: (context, state) => OutlinedButton(
         style: OutlinedButton.styleFrom(
+          side: const BorderSide(color: Colors.orange, strokeAlign: 2),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(4.0),
           ),
@@ -56,11 +57,15 @@ class SignUpButton extends StatelessWidget {
         },
         child: state.formStatus == FormStatus.inProgress
             ? const CircularProgressIndicator()
-            : const Text(
-                'SignUp',
-                style: TextStyle(
-                  color: Colors.black54,
-                  fontSize: 20.0,
+            : const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  'SignUp',
+                  style: TextStyle(
+                    color: Colors.orange,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 22.0,
+                  ),
                 ),
               ),
       ),
