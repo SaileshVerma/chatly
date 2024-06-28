@@ -28,6 +28,36 @@ class UserContactList extends StatelessWidget {
             ),
           );
         }
+
+        if (state.contacts.isEmpty) {
+          return const Column(
+            children: [
+              Text(
+                "Add Your Contacts First",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                "Note: added contacts will be visible here,",
+                style: TextStyle(
+                  fontSize: 10,
+                  color: Colors.black38,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                "click on add contact button on app bar",
+                style: TextStyle(
+                  fontSize: 10,
+                  color: Colors.black38,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          );
+        }
         return ListView.builder(
           itemCount: state.contacts.length,
           itemBuilder: (ctx, i) {
