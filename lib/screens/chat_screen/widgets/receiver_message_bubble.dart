@@ -1,4 +1,5 @@
 import 'package:chatly/models/message.dart';
+import 'package:chatly/widgets/custom_profile_widget.dart';
 import 'package:flutter/material.dart';
 
 class ReceiverMessage extends StatelessWidget {
@@ -30,12 +31,7 @@ class ReceiverMessage extends StatelessWidget {
         ),
 
         child: ListTile(
-          leading: const CircleAvatar(
-            child: Icon(
-              Icons.person,
-              color: Colors.grey,
-            ),
-          ),
+          leading: CustomProfileAvatar(name: senderName, radius: 18),
           title: Text(
             senderName,
             textAlign: TextAlign.left,

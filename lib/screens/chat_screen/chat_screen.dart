@@ -3,6 +3,7 @@ import 'package:chatly/bloc/current_contact/current_contacts.dart';
 import 'package:chatly/screens/chat_screen/widgets/app_bar_title_widget.dart';
 import 'package:chatly/screens/chat_screen/widgets/receiver_message_bubble.dart';
 import 'package:chatly/screens/chat_screen/widgets/sender_message_bubble.dart';
+import 'package:chatly/widgets/custom_profile_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:flutter/material.dart';
@@ -190,7 +191,11 @@ class _ChatScreenState extends State<ChatScreen> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: messageObject?.createdByNumber ==
                                         loggedInUser?.number
-                                    ? SenderMessage(message: messageObject)
+                                    ? SenderMessage(
+                                        message: messageObject,
+                                        currentLoggedInUsername:
+                                            loggedInUser?.name ?? 'User',
+                                      )
                                     : ReceiverMessage(
                                         message: messageObject,
                                         senderName:
@@ -208,12 +213,18 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                   Row(
                     children: [
-                      Text("${loggedInUser?.name ?? "@@@@@@@@"}"),
+                      CustomProfileAvatar(
+                        name: loggedInUser?.name ?? "User",
+                        radius: 22,
+                      ),
                       Expanded(
-                        child: TextField(
-                          controller: _controller,
-                          decoration: const InputDecoration(
-                            labelText: 'Send a message',
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                          child: TextField(
+                            controller: _controller,
+                            decoration: const InputDecoration(
+                              labelText: 'Send a message',
+                            ),
                           ),
                         ),
                       ),

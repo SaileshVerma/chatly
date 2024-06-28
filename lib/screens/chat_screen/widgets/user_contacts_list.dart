@@ -3,6 +3,7 @@ import 'package:chatly/bloc/current_contact/current_contact_bloc.dart';
 import 'package:chatly/bloc/current_contact/current_contact_event.dart';
 import 'package:chatly/screens/chat_screen/chat_screen.dart';
 import 'package:chatly/utils/constants/enums.dart';
+import 'package:chatly/widgets/custom_profile_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -34,8 +35,9 @@ class UserContactList extends StatelessWidget {
             return Column(
               children: [
                 ListTile(
-                  leading: const CircleAvatar(
-                    child: Icon(Icons.person),
+                  leading: CustomProfileAvatar(
+                    name: user.name ?? '@@',
+                    radius: 20,
                   ),
                   title: Text(user.name ?? ''),
                   subtitle: Text(user.number),

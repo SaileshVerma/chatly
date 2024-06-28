@@ -1,6 +1,7 @@
 import 'package:chatly/models/user.dart';
 import 'package:chatly/screens/chat_screen/widgets/logout_button.dart';
 import 'package:chatly/screens/chat_screen/widgets/user_contacts_list.dart';
+import 'package:chatly/widgets/custom_profile_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -20,13 +21,9 @@ class ChatDrawer extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: CircleAvatar(
-              maxRadius: 50,
-              child: Icon(
-                Icons.person,
-                size: 40,
-                color: Colors.grey,
-              ),
+            child: CustomProfileAvatar(
+              name: loggedInUser?.name ?? 'User',
+              radius: 50,
             ),
           ),
           Text(
@@ -37,8 +34,8 @@ class ChatDrawer extends StatelessWidget {
               fontWeight: FontWeight.w600,
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
+          const Padding(
+            padding: EdgeInsets.all(8.0),
             child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -52,10 +49,10 @@ class ChatDrawer extends StatelessWidget {
           ),
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.5,
-            child: UserContactList(),
+            child: const UserContactList(),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
+          const Padding(
+            padding: EdgeInsets.all(8.0),
             child: LogoutButton(),
           ),
         ],

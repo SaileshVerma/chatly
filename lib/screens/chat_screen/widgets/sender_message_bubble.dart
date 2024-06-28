@@ -1,9 +1,12 @@
 import 'package:chatly/models/message.dart';
+import 'package:chatly/widgets/custom_profile_widget.dart';
 import 'package:flutter/material.dart';
 
 class SenderMessage extends StatelessWidget {
+  final String currentLoggedInUsername;
   final Message? message;
   const SenderMessage({
+    required this.currentLoggedInUsername,
     required this.message,
     super.key,
   });
@@ -25,12 +28,8 @@ class SenderMessage extends StatelessWidget {
           ),
         ),
         child: ListTile(
-          trailing: const CircleAvatar(
-            child: Icon(
-              Icons.person,
-              color: Colors.grey,
-            ),
-          ),
+          trailing:
+              CustomProfileAvatar(name: currentLoggedInUsername, radius: 18),
           title: const Text(
             'You',
             textAlign: TextAlign.right,

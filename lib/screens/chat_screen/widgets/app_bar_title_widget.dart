@@ -1,4 +1,5 @@
 import 'package:chatly/bloc/current_contact/current_contacts.dart';
+import 'package:chatly/widgets/custom_profile_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -27,9 +28,9 @@ class AppBarTitleWidget extends StatelessWidget {
           return Visibility.maintain(
             visible: state.currentContact != null,
             child: ListTile(
-              leading: const CircleAvatar(
-                maxRadius: 40,
-                child: Icon(Icons.person),
+              leading: CustomProfileAvatar(
+                name: state.currentContact?.name ?? "",
+                radius: 40,
               ),
               title: Text("${state.currentContact?.name}"),
               subtitle: Text("${state.currentContact?.number}"),
