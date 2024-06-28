@@ -40,11 +40,15 @@ class AddDetailsSubmitButton extends StatelessWidget {
         onPressed: () {
           if (formKey.currentState?.validate() ?? false) {
             ctx.read<ChatBloc>().add(const AddContactDetails());
+            Navigator.of(context).pop();
           }
-
-          // Navigator.of(context).pop();
         },
-        child: const Text('Submit'),
+        child: const Text(
+          'Submit',
+          style: TextStyle(
+            color: Colors.orange,
+          ),
+        ),
       ),
     );
   }

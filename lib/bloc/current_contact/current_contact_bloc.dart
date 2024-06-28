@@ -22,8 +22,23 @@ class CurrentContactBloc
   }
 
   _onUpdateCurrentContact(
-      UpdateCurrentContact event, Emitter<CurrentContactState> emit) {
-    emit(state.copyWith(currentContact: event.contact));
+      UpdateCurrentContact event, Emitter<CurrentContactState> emit) async {
+    final currentContact = event.contact;
+
+    final currentLoggedInUser = await userHiveService.getLoggedInUser();
+
+    final newMessageList =
+        await contactsRepositoryHiveService.getCurrentAndSenderMessages(
+            number: event.contact.number,
+            currentLoggedInUserNumber: currentLoggedInUser?.number ?? "");
+
+    emit(
+      state.copyWith(
+        currentContact: currentContact.copyWith(
+          messages: newMessageList,
+        ),
+      ),
+    );
   }
 
   _onAddCurrentContactMessage(

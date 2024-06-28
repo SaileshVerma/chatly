@@ -1,14 +1,11 @@
 import 'dart:convert';
-import 'package:chatly/bloc/chat/chats.dart';
-import 'package:chatly/bloc/current_contact/current_contact_bloc.dart';
-import 'package:chatly/bloc/current_contact/current_contact_event.dart';
 import 'package:chatly/bloc/current_contact/current_contacts.dart';
 import 'package:chatly/screens/chat_screen/widgets/app_bar_title_widget.dart';
+import 'package:chatly/screens/chat_screen/widgets/receiver_message_bubble.dart';
+import 'package:chatly/screens/chat_screen/widgets/sender_message_bubble.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:flutter/material.dart';
-
-import 'package:chatly/repositories/contacts_repository.dart';
 import 'package:chatly/bloc/contacts/contact_bloc.dart';
 import 'package:chatly/bloc/contacts/contact_event.dart';
 import 'package:chatly/bloc/contacts/contact_state.dart';
@@ -84,21 +81,30 @@ class _ChatScreenState extends State<ChatScreen> {
       key: scaffoldKey,
       appBar: AppBar(
         leading: const DrawerMenuButton(),
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.orange,
         title: const AppBarTitleWidget(),
         actions: [
           IconButton(
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return const AddContactForm();
-                  },
-                );
-              },
-              icon: const Icon(Icons.person_add)),
-          // const LogoutButton(),
-          IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert)),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return const AddContactForm();
+                },
+              );
+            },
+            icon: const Icon(
+              Icons.person_add,
+              color: Colors.white,
+            ),
+          ),
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(
+              Icons.more_vert,
+              color: Colors.white,
+            ),
+          ),
         ],
       ),
       body: BlocBuilder<CurrentContactBloc, CurrentContactState>(
@@ -129,30 +135,68 @@ class _ChatScreenState extends State<ChatScreen> {
                                   ),
                                 );
 
+                          if (contactState.currentContact?.messages?.length ==
+                                  0 ||
+                              contactState.currentContact?.messages == null) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset(
+                                  '../assets/images/nochat.png',
+                                  height: 80,
+                                ),
+                                const Text('No Message Found! '),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: TextButton(
+                                    onPressed: () {
+                                      scaffoldKey.currentState?.openDrawer();
+                                    },
+                                    child: const Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          "Lets Starts",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black45,
+                                          ),
+                                        ),
+                                        Icon(
+                                          Icons.add,
+                                          color: Colors.orange,
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              ],
+                            );
+                          }
                           return ListView.builder(
                             itemCount:
                                 contactState.currentContact?.messages?.length ??
                                     0,
+                            // itemCount: 2,
                             itemBuilder: (ctx, i) {
                               final messageObject =
                                   contactState.currentContact?.messages?[i];
 
                               return Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: Container(
-                                  height: 60,
-                                  color: messageObject?.createdByNumber ==
-                                          loggedInUser?.number
-                                      ? Colors.green
-                                      : Colors.grey,
-                                  child: Column(
-                                    children: [
-                                      Text(messageObject?.content ?? ""),
-                                      Text(
-                                          messageObject?.createdByNumber ?? ""),
-                                    ],
-                                  ),
-                                ),
+                                child: messageObject?.createdByNumber ==
+                                        loggedInUser?.number
+                                    ? SenderMessage(message: messageObject)
+                                    : ReceiverMessage(
+                                        message: messageObject,
+                                        senderName:
+                                            contactState.currentContact?.name ??
+                                                '',
+                                      ),
                               );
                             },
                           );
@@ -185,7 +229,9 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
             );
           }),
-      drawer: const ChatDrawer(),
+      drawer: ChatDrawer(
+        loggedInUser: loggedInUser,
+      ),
     );
   }
 }
@@ -199,7 +245,10 @@ class DrawerMenuButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ContactBloc, ContactState>(
       builder: (ctx, state) => IconButton(
-        icon: const Icon(Icons.menu),
+        icon: const Icon(
+          Icons.menu,
+          color: Colors.white,
+        ),
         onPressed: () {
           ctx.read<ContactBloc>().add(const GetCurrentUserContactList());
           scaffoldKey.currentState?.openDrawer();

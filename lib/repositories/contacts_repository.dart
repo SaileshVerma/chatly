@@ -8,13 +8,14 @@ class ContactsRepositoryHiveService {
       {required Contact contact,
       required String currentLoggedInUserNumber}) async {
     final box = await Hive.openBox<Contact>(CONTACTSBOX);
-    await box.put(contact.number + currentLoggedInUserNumber, contact);
+    await box.put(contact.number, contact);
   }
 
-  Future<Contact?> getContact(String number) async {
-    final box = await Hive.openBox<Contact>(CONTACTSBOX);
-    return box.get(number);
-  }
+  // Future<Contact?> getContact(String number) async {
+  //   final box = await Hive.openBox<Contact>(CONTACTSBOX);
+
+  //   return box.get(number);
+  // }
 
   Future<List<Contact>> getAllGlobalContacts() async {
     final box = await Hive.openBox<Contact>(CONTACTSBOX);
@@ -41,7 +42,7 @@ class ContactsRepositoryHiveService {
   }) async {
     try {
       final box = await Hive.openBox<Contact>(CONTACTSBOX);
-      final key = number + currentLoggedInUserNumber;
+      final key = number;
       final contact = box.get(key);
 
       if (contact != null) {
@@ -58,5 +59,49 @@ class ContactsRepositoryHiveService {
         await box.put(key, updatedContact);
       }
     } catch (error) {}
+  }
+
+  // Future<void> addMessage(Message message) async {
+  //   final box = await Hive.openBox<Message>(MESSAGESBOX);
+  //   await box.put(message.id, message);
+  // }
+
+  // Future<Message?> getMessage(String id) async {
+  //   final box = await Hive.openBox<Message>(MESSAGESBOX);
+  //   return box.get(id);
+  // }
+
+  Future<List<Message>> getCurrentAndSenderMessages({
+    required String number,
+    required String currentLoggedInUserNumber,
+  }) async {
+    final box = await Hive.openBox<Contact>(CONTACTSBOX);
+    final receiverKey = number;
+    final senderKey = currentLoggedInUserNumber;
+
+    final receiverContact = box.get(receiverKey);
+    final senderContact = box.get(senderKey);
+
+    final List<Message> bothMessagesList = [];
+
+    if (receiverContact != null && senderContact != null) {
+      var receiverMessages = List<Message>.from(receiverContact.messages ?? []);
+
+      var senderMessages = List<Message>.from(senderContact.messages ?? []);
+
+      receiverMessages = receiverMessages
+          .where((element) => element.createdByNumber == senderKey)
+          .toList();
+
+      senderMessages = senderMessages
+        ..where((element) => element.createdByNumber == receiverKey).toList();
+
+      final newMergedList = [...receiverMessages, ...senderMessages];
+      newMergedList.sort((a, b) => (a.timestamp ?? (DateTime.now()))
+          .compareTo((b.timestamp ?? (DateTime.now()))));
+      bothMessagesList.addAll(newMergedList);
+    }
+
+    return bothMessagesList;
   }
 }

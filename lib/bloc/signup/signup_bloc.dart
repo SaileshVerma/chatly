@@ -88,6 +88,7 @@ class SignUpBloc extends Bloc<SignupEvent, SignupState> {
     );
 
     await hiveService.addUser(user);
+    await hiveService.saveLoggedInUser(user);
 
     emit(
       state.copyWith(
