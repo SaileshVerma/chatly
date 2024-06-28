@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:chatly/models/contacts.dart';
 import 'package:chatly/utils/constants/hive_boxes.dart';
 import 'package:hive/hive.dart';

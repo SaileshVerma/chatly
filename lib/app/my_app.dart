@@ -1,5 +1,6 @@
 import 'package:chatly/bloc/chat/chats.dart';
 import 'package:chatly/bloc/contacts/contact_bloc.dart';
+import 'package:chatly/bloc/current_contact/current_contact_bloc.dart';
 import 'package:chatly/bloc/login/login.dart';
 import 'package:chatly/bloc/signup/signups.dart';
 import 'package:chatly/models/user.dart';
@@ -28,6 +29,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (ctx) => LoginBloc(),
+        ),
+        BlocProvider(
+          create: (ctx) => CurrentContactBloc(),
         ),
       ],
       child: FutureBuilder(

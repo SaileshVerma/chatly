@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:chatly/screens/chat_screen/widgets/app_bar_title_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,7 @@ import 'package:chatly/models/message.dart';
 import 'package:chatly/models/user.dart';
 import 'package:chatly/repositories/user_repository.dart';
 
-var scaffoldKey = GlobalKey<ScaffoldState>();
+final scaffoldKey = GlobalKey<ScaffoldState>();
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -70,16 +71,9 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
-        leading: DrawerMenuButton(),
+        leading: const DrawerMenuButton(),
         backgroundColor: Colors.green,
-        title: const ListTile(
-          leading: CircleAvatar(
-            maxRadius: 40,
-            child: Icon(Icons.person),
-          ),
-          title: Text("Freind Name"),
-          subtitle: Text("7014152578"),
-        ),
+        title: const AppBarTitleWidget(),
         actions: [
           IconButton(
               onPressed: () {

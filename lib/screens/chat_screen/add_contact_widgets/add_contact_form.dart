@@ -1,7 +1,6 @@
 import 'package:chatly/screens/chat_screen/add_contact_widgets/add_contact_submit_button.dart';
 import 'package:chatly/screens/chat_screen/add_contact_widgets/add_name_field.dart';
 import 'package:chatly/screens/chat_screen/add_contact_widgets/add_number_field.dart';
-import 'package:chatly/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
 
 class AddContactForm extends StatelessWidget {
