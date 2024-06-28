@@ -20,8 +20,8 @@ class LoginScreen extends StatelessWidget {
         children: [
           Expanded(
             flex: 1,
-            child: Image.asset(
-              '../assets/images/bg22.png',
+            child: Image.network(
+              'https://raw.githubusercontent.com/SaileshVerma/chatly/base/assets/images/bg22.png',
               fit: BoxFit.cover,
               width: size.width,
             ),
@@ -98,8 +98,8 @@ class LoginScreen extends StatelessWidget {
             child: Transform(
               alignment: Alignment.center,
               transform: Matrix4.rotationY(math.pi),
-              child: Image.asset(
-                '../assets/images/bg22.png',
+              child: Image.network(
+                'https://raw.githubusercontent.com/SaileshVerma/chatly/base/assets/images/bg22.png',
                 fit: BoxFit.cover,
                 width: size.width,
               ),

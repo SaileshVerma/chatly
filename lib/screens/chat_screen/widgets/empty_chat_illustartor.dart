@@ -12,8 +12,8 @@ class EmptyChatIllustrator extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Image.asset(
-          '../assets/images/nochat.png',
+        Image.network(
+          'https://raw.githubusercontent.com/SaileshVerma/chatly/base/assets/images/nochat.png',
           height: 80,
         ),
         const Text('No Message Found! '),

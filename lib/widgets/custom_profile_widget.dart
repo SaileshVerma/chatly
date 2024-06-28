@@ -19,7 +19,7 @@ class CustomProfileAvatar extends StatelessWidget {
         padding: const EdgeInsets.all(1.8),
         child: CircleAvatar(
           radius: radius,
-          backgroundImage: AssetImage(
+          backgroundImage: NetworkImage(
             getProfilePicAsset(name),
           ),
         ),
