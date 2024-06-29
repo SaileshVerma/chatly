@@ -14,4 +14,4 @@ A simple chat application built with Flutter for the web.
 
 ## Visit CHATly:
 
-### Click on this link to visit CHATLY: https://chatly-ch6a-rfdvvih3h-saileshvermas-projects.vercel.app/
+### Click on this link to visit CHATLY: https://chatly-ch6a.vercel.app/
